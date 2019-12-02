@@ -31,7 +31,6 @@ public class Initialization extends Application{
     public static void main(String[] args)
     {
         launch(args);
-       // Planes airplane = new Planes(0,0);
     }
 
     Missile missile = null;
@@ -39,84 +38,90 @@ public class Initialization extends Application{
     public void start(Stage theStage) throws FileNotFoundException, InterruptedException {
         theStage.setTitle("1942 - Game");
         theStage.setHeight(1000);
-        theStage.setWidth(1000);
+        theStage.setWidth(1000);        //definition of the stage
 
         Group root = new Group();
 
         Scene theScene = new Scene (root);
         theStage.setScene(theScene);
-        Canvas canvas = new Canvas( 1000, 1000 );
+        Canvas canvas = new Canvas( 1000, 1000 );       //definition of the canvas
         root.getChildren().add(canvas);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+    GraphicsContext gc = canvas.getGraphicsContext2D();         //definition of the graphic contest
 
-        List<Paintable> paintables = new CopyOnWriteArrayList<>();
+        List<Paintable> paintables = new CopyOnWriteArrayList<>();      //creation of a list of paintable objects
 
-        List<Missile> missilesList = new CopyOnWriteArrayList<>();
+        List<Missile> missilesList = new CopyOnWriteArrayList<>();      //creation of a list of objects missiles
 
-        List<EnnemiesPlanes> ennemiesList = new CopyOnWriteArrayList<>();
+        List<EnnemiesPlanes> ennemiesList = new CopyOnWriteArrayList<>();      //creation of a list of ennemies planes
 
-        Background background = new Background();
+        Background background = new Background();       //creation of background
         paintables.add(background);
 
         Base base = new Base (0, (int)canvas.getHeight());
 
-        for (int i=0; i<= canvas.getWidth()-base.getWidth(); i+= base.getWidth()) {
+        for (int i=0; i<= canvas.getWidth()-base.getWidth(); i+= base.getWidth()) {       //creation of several bases on the whole width of canvas
             paintables.add(new Base(i, (int)canvas.getHeight()-148));
         }
 
 
-        UserAirplane userAirplane = new UserAirplane((int) canvas.getWidth()/2,  (int) (3*(canvas.getHeight())/4-50));
+        UserAirplane userAirplane = new UserAirplane((int) canvas.getWidth()/2,  (int) (3*(canvas.getHeight())/4-50)); //creation of user plane
         paintables.add(userAirplane);
 
         double start = System.nanoTime();
 
         new AnimationTimer(){
 
-            double frequency = 3000000000.0;
-            double creationTime = frequency;
-            double creationTimeBigEnnemy = 15000000000.0;
+            double frequency = 3000000000.0;        //frequence in which ennemies planes appear
+            double creationTime = frequency;        //time of creation of little ennemies planes
+            double creationTimeBigEnnemy = 15000000000.0;   //time of creation of big ennemies planes
 
             @Override
             public void handle(long now) {
 
-                int userLives = 8;
+                int userLives = 8;  //define initial amount of user lives
 
-                for (Paintable obj:paintables) {
+                for (Paintable obj:paintables) {       //draw all paintable objects
                     obj.paint(gc);
                 }
 
 
                 for (Missile missile:missilesList) {
-                    if(missile.getY() > -40){
-                        missile.moveUp(4);
+                    if(missile.getY() > -40){      //check if the whole missile is still in the canvas
+                        missile.moveUp(4);      //make it move
                     }
                     else {
-                        paintables.remove(missile);
+                        paintables.remove(missile);     //remove missile from paintable objects if it's not in the canvas anymore
+                        missilesList.remove(missile);   //remove missile from missiles list if it's not in the canvas anymore
                     }
                 }
 
 
                 for (EnnemiesPlanes ennemy:ennemiesList) {
-                    if(ennemy.getY() < canvas.getHeight()){
-                        ennemy.moveDown(2);
+                    if(ennemy.getY() < canvas.getHeight()){   //check if ennemy plane is still in the canvas
+                        ennemy.moveDown(2);     //make it move
                     }
-                    else{
-                        paintables.remove(ennemy);
-                        userLives -= 1;
+                    else{                               //if the plane is not in the canvas anymore
+                        if(ennemy.getLives()==1){       //check if the ennemy plane has 1 or 2 lives (if it is a big or a little)
+                            userLives -= 1;             //if it is a little we remove one life to the user
+                        }
+                        else{
+                            userLives -= 2;             //if it is a big one, we remove two lives to the user
+                        }
+                        paintables.remove(ennemy);      //finally we remove the ennemy plane from the paintable objects
                     }
                 }
 
-                //System.out.println("lives : " + userLives);
-                gc.fillText("Lives: " + userLives, 800, 50);
+
+                gc.fillText("Lives: " + userLives, 800, 50);    //make number of remaining user lives appear on the screen
                 gc.setFill( Color.RED );
                 Font theFont = Font.font( "Product Sans", FontWeight.BOLD, 50 );
                 gc.setFont(theFont);
 
 
-                if(userLives <=0) {
-                    GameOver textGameOver = new GameOver();
+                if(userLives <=0) {     //check if the user doesn't have lives anymore
+                    GameOver textGameOver = new GameOver(); //make game over appear on the screen
                     textGameOver.paint(gc);
-                    this.stop();
+                    this.stop();    //stop the game
                 }
 
 
@@ -124,40 +129,40 @@ public class Initialization extends Application{
                 //System.out.println(time);
 
 
-                if(time > 30000000000.0){
-                    frequency = 2000000000.0;
+                if(time > 30000000000.0){       //check if the current time is greater than 30 secondes
+                    frequency = 2000000000.0;   //if yes, create a new ennemy plane each 2 seconds
                 }
 
-                if(time > 60000000000.0){
-                    frequency = 1000000000.0;
+                if(time > 60000000000.0){       //check if the current time is greater than 60 secondes
+                    frequency = 1000000000.0;   //if yes, create a new ennemy plane each second
                 }
 
                 Random rand = new Random();
-                int ennemyXPosition = rand.nextInt((int)canvas.getWidth()-100 - 0 + 1);
+                int ennemyXPosition = rand.nextInt((int)canvas.getWidth()-100 - 0 + 1); //create a random X position for the little ennemy plane
 
                 EnnemiesPlanes littleEnnemyPlane = null;
 
-                if(time > creationTime){
+                if(time > creationTime){    //check if it is the time to create a new little ennemy plane
                     try {
                         littleEnnemyPlane = new EnnemiesPlanes(ennemyXPosition,-100, 100, 100, 1,"src/Game/images/littleEnnemyPlane.png");
                         paintables.add(littleEnnemyPlane);
                         ennemiesList.add(littleEnnemyPlane);
-                        creationTime +=frequency;
+                        creationTime +=frequency;   //increase creation time
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
                 }
 
                 Random rand2 = new Random();
-                int bigEnnemyXPosition = rand2.nextInt((int)canvas.getWidth()-100 - 0 + 1);
+                int bigEnnemyXPosition = rand2.nextInt((int)canvas.getWidth()-100 - 0 + 1); //create a random X position for big ennemy plane
                 EnnemiesPlanes bigEnnemyPlane = null;
 
-                if(time > creationTimeBigEnnemy){
+                if(time > creationTimeBigEnnemy){   //check if it is time to create a new big ennemy plane
                     try{
                         bigEnnemyPlane = new EnnemiesPlanes(bigEnnemyXPosition, -100, 150, 150, 2,"src/Game/images/bigEnnemyPlane.png");
                         paintables.add(bigEnnemyPlane);
                         ennemiesList.add(bigEnnemyPlane);
-                        creationTimeBigEnnemy += 15000000000.0;
+                        creationTimeBigEnnemy += 15000000000.0; //create a new big ennemy plane each 15 seconds
                     }
                     catch(FileNotFoundException e){
                         e.printStackTrace();
@@ -165,7 +170,7 @@ public class Initialization extends Application{
                 }
 
 
-                theScene.setOnKeyPressed((KeyEvent event)-> {
+                theScene.setOnKeyPressed((KeyEvent event)-> {   //user keyboard input
 
                     if(event.getCode()!=null) {
                         switch (event.getCode()){
@@ -195,18 +200,19 @@ public class Initialization extends Application{
                 });
 
 
-                for (Missile missile:missilesList) {
+                for (Missile missile:missilesList) {        //this loop checks if an ennemy plane has been touched by a missile
                     for (EnnemiesPlanes ennemy: ennemiesList) {
-                        if (missile.getX() > (ennemy.getX()-10) && missile.getX() < (ennemy.getX()+100) && missile.getY() > ennemy.getY() && missile.getY() < (ennemy.getY()+100)){
-                            if(ennemy.getLives() == 1){
-                                paintables.remove(missile);
+                        if (missile.getX() > (ennemy.getX()-20) && missile.getX() < (ennemy.getX()+100)
+                                && missile.getY() > ennemy.getY() && missile.getY() < (ennemy.getY()+100)){ //check if missile position is in the ennemy plane area
+                            if(ennemy.getLives() == 1){     //check if the ennemy plane has only one life
+                                paintables.remove(missile); //if yes, remove the given missile and the given ennemy plane from the canvas
                                 missilesList.remove(missile);
                                 paintables.remove(ennemy);
                                 ennemiesList.remove(ennemy);
                             }
                             else{
-                                ennemy.setLives(ennemy.getLives()-1);
-                                paintables.remove(missile);
+                                ennemy.setLives(ennemy.getLives()-1);   //if the ennemy plane had 2 lives, remove 1 life from it
+                                paintables.remove(missile); //remove missile from canvas
                                 missilesList.remove(missile);
                             }
 
