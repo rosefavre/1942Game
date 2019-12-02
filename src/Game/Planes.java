@@ -2,17 +2,14 @@ package Game;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.shape.*;
-import javafx.scene.paint.Color;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class Planes implements Paintable {
 
-    public int xPos;
-    public int yPos;
-    Image plane;
+    private int xPos;
+    private int yPos;
+    private Image plane;
 
     public Planes (int x, int y, int width, int height, String pathToImage) throws FileNotFoundException {
         this.xPos = x;

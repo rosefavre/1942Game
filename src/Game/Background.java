@@ -8,7 +8,7 @@ import java.io.FileNotFoundException;
 
 public class Background implements Paintable{
 
-    Image sand;
+    private Image sand;
 
     public Background() throws FileNotFoundException {
         FileInputStream inputStream = new FileInputStream("src/Game/images/sand.jpg");

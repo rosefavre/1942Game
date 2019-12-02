@@ -3,7 +3,6 @@ package Game;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -11,7 +10,7 @@ public class Missile implements Paintable {
 
     private int xPos;
     private int yPos;
-    Image missile;
+    private Image missile;
 
     public Missile(int x, int y) throws FileNotFoundException {
         this.xPos = x;

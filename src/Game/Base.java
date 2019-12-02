@@ -9,9 +9,9 @@ import javafx.scene.image.Image;
 public class Base implements Paintable {
     private int xPos;
     private int yPos;
-    public final double height = 100;
-    public final double width = 100;
-    Image base;
+    private final double height = 100;
+    private final double width = 100;
+    private Image base;
 
     public Base (int x, int y) throws FileNotFoundException {
         this.xPos = x;
@@ -20,9 +20,6 @@ public class Base implements Paintable {
         this.base = new Image(inputStream, width, height, true, false);
     }
 
-    public double getHeight() {
-        return this.height;
-    }
 
     public double getWidth() {
         return this.width;

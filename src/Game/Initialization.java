@@ -1,28 +1,20 @@
 package Game;
 
-import com.sun.org.apache.xml.internal.security.keys.content.x509.XMLX509IssuerSerial;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.scene.paint.Color;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
-import sun.print.BackgroundLookupListener;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.lang.reflect.InvocationTargetException;
-import java.rmi.UnexpectedException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.ConcurrentModificationException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -35,7 +27,7 @@ public class Initialization extends Application{
 
     Missile missile = null;
 
-    public void start(Stage theStage) throws FileNotFoundException, InterruptedException {
+    public void start(Stage theStage) throws FileNotFoundException {
         theStage.setTitle("1942 - Game");
         theStage.setHeight(1000);
         theStage.setWidth(1000);        //definition of the stage
@@ -140,8 +132,13 @@ public class Initialization extends Application{
                     step = 20;                  //we increase user plane speed
                 }
 
+                if(time > 120000000000.0){
+                    frequency = 0.0000000008;
+                    step = 30;
+                }
+
                 Random rand = new Random();
-                int ennemyXPosition = rand.nextInt((int)canvas.getWidth()-100 - 0 + 1); //create a random X position for the little ennemy plane
+                int ennemyXPosition = rand.nextInt((int) canvas.getWidth() - 100 + 1); //create a random X position for the little ennemy plane
 
                 EnnemiesPlanes littleEnnemyPlane = null;
 
@@ -157,7 +154,7 @@ public class Initialization extends Application{
                 }
 
                 Random rand2 = new Random();
-                int bigEnnemyXPosition = rand2.nextInt((int)canvas.getWidth()-100 - 0 + 1); //create a random X position for big ennemy plane
+                int bigEnnemyXPosition = rand2.nextInt((int)canvas.getWidth()-100 + 1); //create a random X position for big ennemy plane
                 EnnemiesPlanes bigEnnemyPlane = null;
 
                 if(time > creationTimeBigEnnemy){   //check if it is time to create a new big ennemy plane
