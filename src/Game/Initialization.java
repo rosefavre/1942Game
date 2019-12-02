@@ -46,7 +46,7 @@ public class Initialization extends Application{
         theStage.setScene(theScene);
         Canvas canvas = new Canvas( 1000, 1000 );       //definition of the canvas
         root.getChildren().add(canvas);
-    GraphicsContext gc = canvas.getGraphicsContext2D();         //definition of the graphic contest
+        GraphicsContext gc = canvas.getGraphicsContext2D();         //definition of the graphic contest
 
         List<Paintable> paintables = new CopyOnWriteArrayList<>();      //creation of a list of paintable objects
 
@@ -63,17 +63,18 @@ public class Initialization extends Application{
             paintables.add(new Base(i, (int)canvas.getHeight()-148));
         }
 
-
         UserAirplane userAirplane = new UserAirplane((int) canvas.getWidth()/2,  (int) (3*(canvas.getHeight())/4-50)); //creation of user plane
         paintables.add(userAirplane);
 
         double start = System.nanoTime();
+
 
         new AnimationTimer(){
 
             double frequency = 3000000000.0;        //frequence in which ennemies planes appear
             double creationTime = frequency;        //time of creation of little ennemies planes
             double creationTimeBigEnnemy = 15000000000.0;   //time of creation of big ennemies planes
+            int step = 10;      //user plane initial speed
 
             @Override
             public void handle(long now) {
@@ -131,10 +132,12 @@ public class Initialization extends Application{
 
                 if(time > 30000000000.0){       //check if the current time is greater than 30 secondes
                     frequency = 2000000000.0;   //if yes, create a new ennemy plane each 2 seconds
+                    step = 15;                    //we increase user plane speed
                 }
 
                 if(time > 60000000000.0){       //check if the current time is greater than 60 secondes
                     frequency = 1000000000.0;   //if yes, create a new ennemy plane each second
+                    step = 20;                  //we increase user plane speed
                 }
 
                 Random rand = new Random();
@@ -174,13 +177,13 @@ public class Initialization extends Application{
 
                     if(event.getCode()!=null) {
                         switch (event.getCode()){
-                            case LEFT : userAirplane.moveLeft(15);
+                            case LEFT : userAirplane.moveLeft(step);
                                         break;
-                            case RIGHT : userAirplane.moveRight(15);
+                            case RIGHT : userAirplane.moveRight(step);
                                         break;
-                            case DOWN : userAirplane.moveDown(15);
+                            case DOWN : userAirplane.moveDown(step);
                                         break;
-                            case UP : userAirplane.moveUp(15);
+                            case UP : userAirplane.moveUp(step);
                                         break;
                             case SPACE :
                                          try {
