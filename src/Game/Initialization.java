@@ -55,7 +55,8 @@ public class Initialization extends Application{
             paintables.add(new Base(i, (int)canvas.getHeight()-148));
         }
 
-        UserAirplane userAirplane = new UserAirplane((int) canvas.getWidth()/2,  (int) (3*(canvas.getHeight())/4-50)); //creation of user plane
+        //creation of user plane
+        UserAirplane userAirplane = new UserAirplane((int) canvas.getWidth()/2,  (int) (3*(canvas.getHeight())/4-50));
         paintables.add(userAirplane);
 
         double start = System.nanoTime();
